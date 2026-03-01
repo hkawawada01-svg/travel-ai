@@ -26,27 +26,6 @@ interface ResultData {
     recommendation: Recommendation;
 }
 
-const getSpritePosition = (typeId: string) => {
-    switch (typeId) {
-        case 'WSNF': return '0% 0%';
-        case 'WSNP': return '33.333% 0%';
-        case 'CSNF': return '66.666% 0%';
-        case 'CSNP': return '100% 0%';
-        case 'WSUF': return '0% 33.333%';
-        case 'WSUP': return '33.333% 33.333%';
-        case 'CSUF': return '66.666% 33.333%';
-        case 'CSUP': return '100% 33.333%';
-        case 'WGNF': return '0% 66.666%';
-        case 'WGNP': return '33.333% 66.666%';
-        case 'CGNF': return '66.666% 66.666%';
-        case 'CGNP': return '100% 66.666%';
-        case 'WGUF': return '0% 100%';
-        case 'WGUP': return '33.333% 100%';
-        case 'CGUF': return '66.666% 100%';
-        case 'CGUP': return '100% 100%';
-        default: return '0% 0%';
-    }
-};
 
 export default function ResultPage() {
     const [data, setData] = useState<ResultData | null>(null);
@@ -114,19 +93,7 @@ export default function ResultPage() {
                 <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.8rem', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px' }}>
                     あなたの旅人タイプ
                 </p>
-                <div style={{
-                    width: '100%',
-                    aspectRatio: '16/9',
-                    maxWidth: '400px',
-                    margin: '0 auto 20px',
-                    borderRadius: '24px',
-                    boxShadow: '0 12px 40px rgba(0,0,0,0.2)',
-                    backgroundImage: 'url(/images/16types-sprite.png)',
-                    backgroundSize: '400% 400%',
-                    backgroundPosition: getSpritePosition(travelerType.id),
-                    backgroundRepeat: 'no-repeat',
-                    border: '4px solid rgba(255,255,255,0.2)'
-                }}></div>
+                <div style={{ fontSize: '4rem', marginBottom: '12px' }}>{travelerType.emoji}</div>
                 <h1 style={{ color: 'white', fontSize: 'clamp(1.8rem, 5vw, 2.8rem)', fontWeight: 900, marginBottom: '8px', fontFamily: "'Outfit', 'Noto Sans JP', sans-serif" }}>
                     {travelerType.name}
                 </h1>
