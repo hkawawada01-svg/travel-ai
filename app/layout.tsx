@@ -49,6 +49,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="theme-color" content="#0891b2" />
 
+        {/* Google AdSense審査用タグ */}
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3037170382907765" crossOrigin="anonymous"></script>
+
         {/* Google Analytics 4 */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-049XV04SXD"></script>
         <script
