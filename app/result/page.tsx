@@ -68,7 +68,6 @@ export default function ResultPage() {
     const v = Date.now();
     const shareUrl = `${origin}/share?type=${travelerType.id}&dest=${encodeURIComponent(dest.name)}&keyword=${encodeURIComponent(keyword)}&v=${v}`;
     const tweetText = `🌍 AI旅行先診断結果\n旅人タイプ：${travelerType.emoji}${travelerType.name}\nおすすめ：${dest.emoji}${dest.name}\n\n`;
-    const ogImageUrl = `${origin}/api/og?type=${travelerType.id}&typeName=${encodeURIComponent(travelerType.name)}&emoji=${encodeURIComponent(travelerType.emoji)}&dest=${encodeURIComponent(dest.name)}&keyword=${encodeURIComponent(keyword)}&tagline=${encodeURIComponent(travelerType.tagline)}&v=${v}`;
 
     const handleShare = async () => {
         if (navigator.share) {
@@ -221,32 +220,18 @@ export default function ResultPage() {
                     <h2 style={{ fontWeight: 800, color: '#1e293b', marginBottom: '6px', textAlign: 'center', fontSize: '1.1rem' }}>結果をシェアする 🎉</h2>
                     <p style={{ color: '#64748b', fontSize: '0.85rem', textAlign: 'center', marginBottom: '20px' }}>友達にも旅人タイプを診断させよう</p>
 
-                    {/* 画像保存・シェアセクション */}
-                    <div style={{ marginTop: '24px', textAlign: 'center', padding: '20px', background: '#f8fafc', borderRadius: '20px', border: '1px solid #e2e8f0' }}>
-                        <h3 style={{ color: '#1e293b', fontSize: '1rem', fontWeight: 800, marginBottom: '8px' }}>
-                            📸 画像を保存してシェア
-                        </h3>
-                        <p style={{ color: '#475569', fontSize: '0.8rem', marginBottom: '16px', lineHeight: 1.5 }}>
-                            下の画像を長押し（または右クリック）で保存して、<br />
-                            𝕏 に貼り付けて投稿しよう！
-                        </p>
-                        <div style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', marginBottom: '20px' }}>
-                            <img src={ogImageUrl} alt="Traveler Card" style={{ width: '100%', display: 'block' }} />
-                        </div>
-
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            <a
-                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`}
-                                target="_blank" rel="noopener noreferrer"
-                                style={{ display: 'block', padding: '14px', borderRadius: '14px', background: '#000', color: 'white', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.95rem' }}
-                            >
-                                𝕏 でシェア
-                            </a>
-                            <button onClick={handleShare}
-                                style={{ padding: '14px', borderRadius: '14px', border: '2px solid #e2e8f0', background: 'white', color: '#374151', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
-                                {copied ? '✓ コピーしました！' : '🔗 リンクをコピー'}
-                            </button>
-                        </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <a
+                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`}
+                            target="_blank" rel="noopener noreferrer"
+                            style={{ display: 'block', padding: '14px', borderRadius: '14px', background: '#000', color: 'white', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.95rem' }}
+                        >
+                            𝕏 でシェア
+                        </a>
+                        <button onClick={handleShare}
+                            style={{ padding: '14px', borderRadius: '14px', border: '2px solid #e2e8f0', background: 'white', color: '#374151', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
+                            {copied ? '✓ コピーしました！' : '🔗 リンクをコピー'}
+                        </button>
                     </div>
                 </>)}
 
