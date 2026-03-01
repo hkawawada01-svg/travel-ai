@@ -59,21 +59,28 @@ export default function TypeDetailPage({ params }: { params: { id: string } }) {
                     </p>
                 </section>
 
-                {/* Destinations */}
+                {/* Destinations (Teaser) */}
                 <section>
                     <h2 className="text-2xl font-bold mb-6 text-slate-800 border-l-4 pl-4 border-slate-300">
-                        {t.name}に絶対おすすめの旅行先
+                        {t.name}に絶対おすすめの旅行先は？
                     </h2>
                     <p className="text-slate-600 mb-6 font-medium">
-                        このタイプのあなたが最も輝く、または心が満たされる可能性が高い国や都市の例です。
+                        このタイプのあなたが最も輝く、または心が満たされる可能性が高い国や都市が存在します。
+                        しかし、同じ「{t.name}」タイプでも、あなたの現在の気分や予算、選ぶ選択肢によって、パーフェクトな行先は変わってきます。
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {t.primaryDestinations.map((dest, i) => (
-                            <div key={i} className="flex items-center gap-3 bg-white border-2 border-slate-100 p-4 rounded-xl hover:border-cyan-500 transition-colors shadow-sm">
-                                <span className="text-2xl">🌍</span>
-                                <span className="font-bold text-slate-700 text-lg">{dest}</span>
-                            </div>
-                        ))}
+
+                    <div className="bg-slate-100 rounded-2xl p-8 text-center border-2 border-dashed border-slate-300 relative overflow-hidden">
+                        <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[2px]"></div>
+                        <div className="relative z-10 flex flex-col items-center gap-4">
+                            <span className="text-4xl">🔒</span>
+                            <h3 className="text-xl font-bold text-slate-700">あなた専用の旅行先は、AI診断の中で公開！</h3>
+                            <p className="text-slate-600 font-medium mb-4">世界中から厳選された、あなたを満たす最高の目的地をお教えします。</p>
+                            <Link href="/quiz">
+                                <button className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-10 rounded-full shadow-lg transition-transform hover:scale-105">
+                                    いますぐAI旅行先診断を受ける（無料）
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 </section>
 

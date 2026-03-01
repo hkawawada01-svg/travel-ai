@@ -238,6 +238,7 @@ export default function HomePage() {
       <footer style={{ background: '#0f172a', padding: '32px 24px', textAlign: 'center' }}>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '16px', flexWrap: 'wrap' }}>
           <Link href="/types" style={{ color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'none' }}>16タイプの旅人一覧</Link>
+          <Link href="/articles" style={{ color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'none' }}>旅行のお悩み解決コラム</Link>
           <Link href="/privacy" style={{ color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'none' }}>プライバシーポリシー</Link>
           <a href="https://docs.google.com/forms/d/e/1FAIpQLSchC1riak4QihhbX6ak6tbphbEbQadQViFRvuYDR6unMl7hdA/viewform" target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'none' }}>お問い合わせ</a>
         </div>
