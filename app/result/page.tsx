@@ -50,13 +50,14 @@ export default function ResultPage() {
     }, []);
 
     const handleShare = async () => {
+        const shareUrl = `${origin}/share?type=${data?.travelerType.id}&dest=${encodeURIComponent(data?.recommendation.mainDestination.name || '')}`;
         const text = data
             ? `🌍 AI旅行先診断の結果\n\n私の旅人タイプ：${data.travelerType.emoji} ${data.travelerType.name}\nおすすめ旅行先：${data.recommendation.mainDestination.emoji} ${data.recommendation.mainDestination.name}\n\nあなたも診断してみて！`
             : '';
         if (navigator.share) {
-            navigator.share({ title: 'AI旅行先診断の結果', text, url: origin });
+            navigator.share({ title: 'AI旅行先診断の結果', text, url: shareUrl });
         } else {
-            navigator.clipboard.writeText(`${text}\n${origin}`);
+            navigator.clipboard.writeText(`${text}\n${shareUrl}`);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         }
@@ -202,7 +203,7 @@ export default function ResultPage() {
                     <p style={{ color: '#64748b', fontSize: '0.85rem', textAlign: 'center', marginBottom: '20px' }}>友達にも旅人タイプを診断させよう</p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <a
-                            href={`https://twitter.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(origin)}`}
+                            href={`https://twitter.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(`${origin}/share?type=${travelerType.id}&dest=${encodeURIComponent(dest.name)}`)}`}
                             target="_blank" rel="noopener noreferrer"
                             style={{ display: 'block', padding: '14px', borderRadius: '14px', background: '#000', color: 'white', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.95rem' }}
                         >
