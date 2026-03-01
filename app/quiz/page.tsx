@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { questions } from '@/data/questions';
 
 export default function QuizPage() {
@@ -98,6 +99,22 @@ export default function QuizPage() {
             background: 'linear-gradient(180deg, #0e7490 0%, #0891b2 30%, #87ceeb 70%, #e0f4fb 100%)',
             display: 'flex', flexDirection: 'column',
         }}>
+
+            {/* 戻る導線 */}
+            <div style={{ padding: '16px 20px 0', maxWidth: '560px', margin: '0 auto', width: '100%' }}>
+                <Link href="/" style={{
+                    color: 'rgba(255,255,255,0.9)',
+                    textDecoration: 'none',
+                    fontSize: '0.85rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    fontWeight: 700,
+                    letterSpacing: '0.05em',
+                }}>
+                    ← ホームへ戻る
+                </Link>
+            </div>
 
             {/* プログレスバー */}
             <div style={{ padding: '16px 20px 12px', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)' }}>
