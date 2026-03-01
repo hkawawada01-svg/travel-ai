@@ -237,9 +237,8 @@ export default function HomePage() {
       {/* ===== FOOTER ===== */}
       <footer style={{ background: '#0f172a', padding: '32px 24px', textAlign: 'center' }}>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '16px', flexWrap: 'wrap' }}>
-          {['プライバシーポリシー', '利用規約', 'お問い合わせ'].map((t) => (
-            <a key={t} href="#" style={{ color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'none' }}>{t}</a>
-          ))}
+          <Link href="/privacy" style={{ color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'none' }}>プライバシーポリシー</Link>
+          <a href="https://forms.gle/your-form-link-here" target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'none' }}>お問い合わせ</a>
         </div>
         <p style={{ color: '#64748b', fontSize: '0.78rem', margin: '4px 0' }}>© 2025 AI旅行先診断. All rights reserved.</p>
         <p style={{ color: '#64748b', fontSize: '0.78rem', margin: '4px 0' }}>※ 旅行先への安全確認は必ずご自身でお願いいたします。</p>
