@@ -3,6 +3,23 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
+// フォントを動的に取得するヘルパー
+async function getFont(text: string) {
+    const API = `https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&text=${encodeURIComponent(text)}`;
+    const css = await (
+        await fetch(API, {
+            headers: {
+                // TTF または WOFF を取得するためのレガシーUser-Agent
+                "User-Agent": "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; de-at) AppleWebKit/533.21.1 (KHTML, like Gecko) Version/5.0.5 Safari/533.21.1"
+            }
+        })
+    ).text();
+    const resource = css.match(/src: url\((.+)\) format\('(woff|truetype)'\)/);
+    if (!resource) return null;
+    const res = await fetch(resource[1]);
+    return res.arrayBuffer();
+}
+
 export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
@@ -13,7 +30,12 @@ export async function GET(request: NextRequest) {
         const dest = searchParams.get('dest') || '世界中のどこか';
         const color = searchParams.get('color') || 'from-cyan-500 to-blue-600';
 
-        // Convert Tailwind gradients to generic CSS colors for OG
+        // 描画するすべての文字列からユニークな文字セットを抽出する
+        const allText = 'AI旅行先診断あなたにぴったりの旅行先は...find-my-trip-ai.comで無料診断📍' + type + typeName + dest + emoji;
+        const uniqueChars = Array.from(new Set(allText.split(''))).join('');
+        const fontData = await getFont(uniqueChars);
+
+        // Convert Tailwind gradients...
         let bgGradient = 'linear-gradient(135deg, #0ea5e9, #2563eb)'; // Default cyan-to-blue
         if (color.includes('rose') || color.includes('pink')) bgGradient = 'linear-gradient(135deg, #fb7185, #e11d48)';
         if (color.includes('emerald') || color.includes('green')) bgGradient = 'linear-gradient(135deg, #34d399, #059669)';
@@ -91,6 +113,16 @@ export async function GET(request: NextRequest) {
             {
                 width: 1200,
                 height: 630,
+                ...(fontData && {
+                    fonts: [
+                        {
+                            name: 'Noto Sans JP',
+                            data: fontData,
+                            style: 'normal',
+                            weight: 700,
+                        },
+                    ],
+                }),
             }
         );
     } catch (e: any) {
