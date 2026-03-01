@@ -53,12 +53,19 @@ export default function QuizPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ answers: finalAnswers }),
             });
-            if (!res.ok) throw new Error('API error');
+
             const data = await res.json();
+
+            if (!res.ok) {
+                console.error("API error response:", data);
+                throw new Error(`${data.error}: ${data.details || 'Unknown error'}`);
+            }
+
             sessionStorage.setItem('travelResult', JSON.stringify(data));
             router.push('/result');
-        } catch {
-            setError('結果の生成に失敗しました。もう一度お試しください。');
+        } catch (err: any) {
+            console.error(err);
+            setError(`結果の生成に失敗しました: ${err.message}`);
             setIsLoading(false);
         }
     };

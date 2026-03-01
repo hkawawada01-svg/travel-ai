@@ -3,30 +3,30 @@ import { geminiModel } from '@/lib/gemini';
 import { travelerTypes, calcTravelerType } from '@/data/travelerTypes';
 
 export async function POST(req: NextRequest) {
-    try {
-        const body = await req.json();
-        const { answers } = body;
+  try {
+    const body = await req.json();
+    const { answers } = body;
 
-        if (!answers) {
-            return NextResponse.json({ error: 'answers required' }, { status: 400 });
-        }
+    if (!answers) {
+      return NextResponse.json({ error: 'answers required' }, { status: 400 });
+    }
 
-        const typeId = calcTravelerType(answers);
-        const travelerType = travelerTypes[typeId];
+    const typeId = calcTravelerType(answers);
+    const travelerType = travelerTypes[typeId];
 
-        const mode = answers.q_mode || 'normal';
-        const budget = answers.q_budget || 'under10';
-        const days = answers.q_days || 'week';
-        const purpose = (answers.q_purpose || []).join(', ');
-        const avoid = (answers.q_avoid || []).join(', ');
+    const mode = answers.q_mode || 'normal';
+    const budget = answers.q_budget || 'under10';
+    const days = answers.q_days || 'week';
+    const purpose = (answers.q_purpose || []).join(', ');
+    const avoid = (answers.q_avoid || []).join(', ');
 
-        const modeInstruction = mode === 'spicy'
-            ? 'あなたは辛口で毒舌な旅行ガイドです。褒めるより鋭いツッコミを入れながらも、的確な提案をします。ため口で話し、ちょっと失礼なくらいのコメントを入れてください。'
-            : mode === 'funny'
-                ? 'あなたはお笑い芸人スタイルの旅行ガイドです。ボケとツッコミを交えながら、笑えるコメントで旅行先を提案します。'
-                : 'あなたは親切で情熱的な旅行ガイドです。ユーザーの旅行先への期待感を高めるような温かいコメントをします。';
+    const modeInstruction = mode === 'spicy'
+      ? 'あなたは辛口で毒舌な旅行ガイドです。褒めるより鋭いツッコミを入れながらも、的確な提案をします。ため口で話し、ちょっと失礼なくらいのコメントを入れてください。'
+      : mode === 'funny'
+        ? 'あなたはお笑い芸人スタイルの旅行ガイドです。ボケとツッコミを交えながら、笑えるコメントで旅行先を提案します。'
+        : 'あなたは親切で情熱的な旅行ガイドです。ユーザーの旅行先への期待感を高めるような温かいコメントをします。';
 
-        const prompt = `
+    const prompt = `
 ${modeInstruction}
 
 ユーザーの旅人タイプは「${travelerType.name}（${typeId}型）」です。
@@ -80,27 +80,30 @@ JSONのみを返してください（コードブロック不要）：
 }
 `;
 
-        const result = await geminiModel.generateContent(prompt);
-        const text = result.response.text();
+    const result = await geminiModel.generateContent(prompt);
+    const text = result.response.text();
 
-        // JSON部分を抽出
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) {
-            throw new Error('Invalid JSON response from Gemini');
-        }
-
-        const recommendation = JSON.parse(jsonMatch[0]);
-
-        return NextResponse.json({
-            typeId,
-            travelerType,
-            recommendation,
-        });
-    } catch (error) {
-        console.error('Recommend API error:', error);
-        return NextResponse.json(
-            { error: 'Failed to generate recommendation' },
-            { status: 500 }
-        );
+    // JSON部分を抽出
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Invalid JSON response from Gemini');
     }
+
+    const recommendation = JSON.parse(jsonMatch[0]);
+
+    return NextResponse.json({
+      typeId,
+      travelerType,
+      recommendation,
+    });
+  } catch (error: any) {
+    console.error('Recommend API error:', error);
+    return NextResponse.json(
+      {
+        error: 'Failed to generate recommendation',
+        details: error?.message || String(error)
+      },
+      { status: 500 }
+    );
+  }
 }
