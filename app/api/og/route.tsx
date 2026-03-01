@@ -28,20 +28,15 @@ export async function GET(request: NextRequest) {
         const typeName = searchParams.get('typeName') || '旅人';
         const emoji = searchParams.get('emoji') || '✈️';
         const dest = searchParams.get('dest') || '世界中のどこか';
-        const color = searchParams.get('color') || 'from-cyan-500 to-blue-600';
+        const keyword = searchParams.get('keyword') || dest;
+        const tagline = searchParams.get('tagline') || 'まだ知らない自分の旅が、ある。';
 
         // 描画するすべての文字列からユニークな文字セットを抽出する
-        const allText = 'AI旅行先診断あなたにぴったりの旅行先は...find-my-trip-ai.comで無料診断📍' + type + typeName + dest + emoji;
+        const allText = 'あなたの旅人タイプは...型『』そんなあなたにおすすめなのは📍' + type + typeName + dest + emoji + tagline;
         const uniqueChars = Array.from(new Set(allText.split(''))).join('');
         const fontData = await getFont(uniqueChars);
 
-        // Convert Tailwind gradients...
-        let bgGradient = 'linear-gradient(135deg, #0ea5e9, #2563eb)'; // Default cyan-to-blue
-        if (color.includes('rose') || color.includes('pink')) bgGradient = 'linear-gradient(135deg, #fb7185, #e11d48)';
-        if (color.includes('emerald') || color.includes('green')) bgGradient = 'linear-gradient(135deg, #34d399, #059669)';
-        if (color.includes('amber') || color.includes('yellow')) bgGradient = 'linear-gradient(135deg, #fbbf24, #d97706)';
-        if (color.includes('purple') || color.includes('indigo')) bgGradient = 'linear-gradient(135deg, #c084fc, #6366f1)';
-        if (color.includes('slate') || color.includes('gray')) bgGradient = 'linear-gradient(135deg, #94a3b8, #475569)';
+        const bgUrl = `https://loremflickr.com/1200/630/${encodeURIComponent(keyword)},landscape/all`;
 
         return new ImageResponse(
             (
@@ -51,61 +46,65 @@ export async function GET(request: NextRequest) {
                         width: '100%',
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center',
                         justifyContent: 'center',
-                        background: bgGradient,
                         fontFamily: '"Noto Sans JP", sans-serif',
                         position: 'relative',
+                        backgroundColor: '#0f172a',
                     }}
                 >
-                    {/* Background Pattern Elements */}
-                    <div style={{ position: 'absolute', top: -100, left: -100, width: 400, height: 400, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }}></div>
-                    <div style={{ position: 'absolute', bottom: -150, right: -50, width: 500, height: 500, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }}></div>
+                    {/* Background Image */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={bgUrl}
+                        alt="bg"
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            opacity: 0.45,
+                        }}
+                    />
 
+                    {/* Content Overlay */}
                     <div
                         style={{
                             display: 'flex',
                             flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            background: 'rgba(255, 255, 255, 0.95)',
                             padding: '60px 80px',
-                            borderRadius: '40px',
-                            boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
-                            width: '85%',
-                            maxWidth: '1000px',
+                            position: 'relative',
+                            zIndex: 10,
+                            height: '100%',
+                            justifyContent: 'space-between',
                         }}
                     >
-                        <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#64748b', letterSpacing: '0.1em', marginBottom: '10px' }}>
-                            AI旅行先診断
-                        </div>
-
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-                            <div style={{ fontSize: '80px', marginRight: '20px' }}>{emoji}</div>
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <div style={{ fontSize: '30px', fontWeight: 'bold', color: '#94a3b8' }}>{type}型</div>
-                                <div style={{ fontSize: '42px', fontWeight: '900', color: '#1e293b' }}>{typeName}</div>
+                        {/* Top half: traveler type */}
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <div style={{ fontSize: '32px', color: '#e2e8f0', marginBottom: '16px', fontWeight: 700, letterSpacing: '0.05em' }}>
+                                あなたの旅人タイプは...
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <div style={{ fontSize: '72px', marginRight: '24px' }}>{emoji}</div>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <div style={{ fontSize: '28px', color: '#cbd5e1', fontWeight: 700, marginBottom: '4px' }}>{type}型</div>
+                                    <div style={{ fontSize: '56px', color: '#ffffff', fontWeight: 900 }}>{typeName}</div>
+                                </div>
+                            </div>
+                            <div style={{ fontSize: '28px', color: '#cbd5e1', marginTop: '16px', fontWeight: 700 }}>
+                                『{tagline}』
                             </div>
                         </div>
 
-                        <div style={{ fontSize: '28px', color: '#64748b', marginTop: '20px', marginBottom: '10px' }}>
-                            あなたにぴったりの旅行先は...
-                        </div>
-
-                        <div
-                            style={{
-                                fontSize: dest.length > 15 ? '56px' : '72px',
-                                fontWeight: '900',
-                                color: '#0f172a',
-                                textAlign: 'center',
-                                lineHeight: 1.2
-                            }}
-                        >
-                            📍 {dest}
-                        </div>
-
-                        <div style={{ marginTop: '40px', fontSize: '24px', fontWeight: 'bold', color: '#0284c7', background: '#e0f2fe', padding: '12px 30px', borderRadius: '100px' }}>
-                            find-my-trip-ai.com で無料診断
+                        {/* Bottom half: recommendation */}
+                        <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'auto', background: 'rgba(0,0,0,0.65)', padding: '40px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <div style={{ fontSize: '28px', color: '#e2e8f0', marginBottom: '12px', fontWeight: 700 }}>
+                                そんなあなたにおすすめなのは
+                            </div>
+                            <div style={{ fontSize: dest.length > 15 ? '56px' : '72px', color: '#ffffff', fontWeight: 900, lineHeight: 1.2 }}>
+                                📍 {dest}
+                            </div>
                         </div>
                     </div>
                 </div>

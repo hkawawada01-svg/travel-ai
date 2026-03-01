@@ -14,9 +14,13 @@ export async function POST(req: NextRequest) {
     const typeId = calcTravelerType(answers);
     const travelerType = travelerTypes[typeId];
 
-    const mode = answers.q_mode || 'normal';
-    const budget = answers.q_budget || 'under10';
-    const days = answers.q_days || 'week';
+    const modeMap: Record<string, string> = { normal: '普通', spicy: '辛口', funny: 'お笑い' };
+    const budgetMap: Record<string, string> = { under5: '5万円以下', under10: '10万円以下', under20: '20万円以下', over20: '20万円以上' };
+    const daysMap: Record<string, string> = { '1day': '日帰り', 'weekend': '週末（1泊2日〜）', 'week': '1週間程度', 'long': '2週間以上' };
+
+    const mode = answers.q_mode ? String(answers.q_mode) : 'normal';
+    const budget = answers.q_budget ? budgetMap[String(answers.q_budget)] || '10万円以下' : '10万円以下';
+    const days = answers.q_days ? daysMap[String(answers.q_days)] || '1週間程度' : '1週間程度';
     const purpose = (answers.q_purpose || []).join(', ');
     const avoid = (answers.q_avoid || []).join(', ');
 
@@ -51,9 +55,10 @@ ${modeInstruction}
 JSONのみを返してください（コードブロック不要）：
 {
   "mainDestination": {
+    "region": "大まかな地域（例：アジア、ヨーロッパ、中東など）",
     "name": "旅行先の正式名称（例：ジョージア共和国・トビリシ）",
     "emoji": "国旗or関連絵文字",
-    "reason": "なぜこの旅行先があなたにぴったりなのか（200字程度）",
+    "reason": "なぜこの旅行先があなたにぴったりなのか（適度に改行「\\n」を含めて読みやすい200字程度）",
     "spots": [
       { "name": "スポット名", "description": "50字程度の説明" },
       { "name": "スポット名", "description": "50字程度の説明" },
@@ -76,7 +81,7 @@ JSONのみを返してください（コードブロック不要）：
       "reason": "100字程度"
     }
   ],
-  "personalComment": "旅人タイプに合わせたパーソナルコメント（${mode === 'spicy' ? '辛口・毒舌で' : mode === 'funny' ? '笑えるボケツッコミで' : '温かく'}、なぜその旅行先が合うのかという深層心理の分析を厚めにし、強烈に旅行に行きたくなるような文章を400〜600字程度の長めのボリュームで書いてください）",
+  "personalComment": "旅人タイプに合わせたパーソナルコメント（${mode === 'spicy' ? '辛口・毒舌で' : mode === 'funny' ? '笑えるボケツッコミで' : '温かく'}、なぜその旅行先が合うのかという深層心理の分析を厚めにし、強烈に旅行に行きたくなるような文章を400〜600字程度の長めのボリュームで書いてください。必ず適度に改行「\\n\\n」を入れて、段落を分けて読みやすくすること。）",
   "isJapanOnly": false
 }
 `;

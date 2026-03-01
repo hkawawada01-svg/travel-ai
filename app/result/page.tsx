@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 interface Spot { name: string; description: string; }
 interface MainDestination {
+    region?: string;
     name: string; emoji: string; reason: string;
     spots: Spot[]; budget: string; bestSeason: string;
     warningNote: string | null; searchQuery: string;
@@ -78,7 +79,8 @@ export default function ResultPage() {
 
     const { travelerType, recommendation } = data;
     const { mainDestination: dest, subDestinations, personalComment } = recommendation;
-    const shareUrl = `${origin}/share?type=${travelerType.id}&dest=${encodeURIComponent(dest.name)}`;
+    const keyword = dest.searchQuery ? dest.searchQuery.split(' ')[0] : dest.name;
+    const shareUrl = `${origin}/share?type=${travelerType.id}&dest=${encodeURIComponent(dest.name)}&keyword=${encodeURIComponent(keyword)}`;
     const tweetText = `🌍 AI旅行先診断結果\n旅人タイプ：${travelerType.emoji}${travelerType.name}\nおすすめ：${dest.emoji}${dest.name}\n\n`;
 
     const card = (children: React.ReactNode, style?: React.CSSProperties) => (
@@ -103,7 +105,7 @@ export default function ResultPage() {
 
                 {/* AIコメント */}
                 <div style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', borderRadius: '20px', padding: '20px', border: '1px solid rgba(255,255,255,0.25)', textAlign: 'left' }}>
-                    <p style={{ color: 'white', fontSize: '0.95rem', lineHeight: 1.8 }}>💬 {personalComment}</p>
+                    <p style={{ color: 'white', fontSize: '0.95rem', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>💬 {personalComment}</p>
                 </div>
             </section>
 
@@ -114,11 +116,16 @@ export default function ResultPage() {
                     <p style={{ color: '#0891b2', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '12px' }}>
                         🎯 おすすめ旅行先
                     </p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                        <span style={{ fontSize: '3rem' }}>{dest.emoji}</span>
-                        <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontWeight: 800, color: '#0e7490', fontFamily: "'Outfit', 'Noto Sans JP', sans-serif" }}>
-                            {dest.name}
-                        </h2>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '16px' }}>
+                        {dest.region && (
+                            <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 700 }}>🌍 {dest.region}</span>
+                        )}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <span style={{ fontSize: '3rem' }}>{dest.emoji}</span>
+                            <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontWeight: 800, color: '#0e7490', fontFamily: "'Outfit', 'Noto Sans JP', sans-serif" }}>
+                                {dest.name}
+                            </h2>
+                        </div>
                     </div>
 
                     {imageUrl && (
@@ -135,7 +142,7 @@ export default function ResultPage() {
                         </div>
                     )}
 
-                    <p style={{ color: '#374151', fontSize: '0.9rem', lineHeight: 1.75, marginBottom: '16px' }}>{dest.reason}</p>
+                    <p style={{ color: '#374151', fontSize: '0.9rem', lineHeight: 1.75, marginBottom: '16px', whiteSpace: 'pre-wrap' }}>{dest.reason}</p>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px' }}>
                         {[
@@ -165,7 +172,7 @@ export default function ResultPage() {
                         ))}
                     </div>
 
-                    {/* アフィリエイトCTA */}
+                    {/* アフィリエイトCTA & 検索ボタン */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <a href="https://www.trip.com/flights/?locale=ja-jp" target="_blank" rel="noopener noreferrer"
                             style={{ display: 'block', padding: '16px', borderRadius: '16px', background: 'linear-gradient(135deg, #f97316, #fb923c)', color: 'white', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.95rem' }}>
@@ -179,6 +186,16 @@ export default function ResultPage() {
                             style={{ display: 'block', padding: '14px', borderRadius: '16px', background: '#bf0000', color: 'white', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.9rem' }}>
                             🗺️ ツアーを探す（楽天トラベル）
                         </a>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '4px' }}>
+                            <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dest.name)}`} target="_blank" rel="noopener noreferrer"
+                                style={{ display: 'block', padding: '12px', borderRadius: '12px', background: '#f1f5f9', color: '#475569', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.85rem' }}>
+                                📍 Google Maps
+                            </a>
+                            <a href={`https://www.google.com/search?q=${encodeURIComponent(dest.name + ' 観光')}`} target="_blank" rel="noopener noreferrer"
+                                style={{ display: 'block', padding: '12px', borderRadius: '12px', background: '#f1f5f9', color: '#475569', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.85rem' }}>
+                                🔍 Google 検索
+                            </a>
+                        </div>
                     </div>
                 </>)}
 

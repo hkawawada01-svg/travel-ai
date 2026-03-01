@@ -5,6 +5,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     const params = await searchParams;
     const type = params.type as string;
     const dest = params.dest as string;
+    const keyword = (params.keyword as string) || dest;
 
     // タイプコードから型データを取り出す
     const typeId = type as TravelerTypeId;
@@ -25,6 +26,9 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     ogImageUrl.searchParams.set('typeName', t.name);
     ogImageUrl.searchParams.set('emoji', t.emoji);
     ogImageUrl.searchParams.set('dest', dest);
+    ogImageUrl.searchParams.set('keyword', keyword);
+    ogImageUrl.searchParams.set('tagline', t.tagline);
+    // color is not heavily used in new design, but kept for compatibility
     ogImageUrl.searchParams.set('color', t.color);
 
     const title = `AI旅行先診断結果：私は【${t.name}】タイプ！おすすめは【${dest}】`;
@@ -37,7 +41,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
             title,
             description,
             type: 'website',
-            url: `${siteUrl}/share?type=${type}&dest=${encodeURIComponent(dest)}`,
+            url: `${siteUrl}/share?type=${type}&dest=${encodeURIComponent(dest)}&keyword=${encodeURIComponent(keyword)}`,
             images: [
                 {
                     url: ogImageUrl.toString(),
