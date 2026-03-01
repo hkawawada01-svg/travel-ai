@@ -39,11 +39,11 @@ export default function ResultPage() {
             const parsed = JSON.parse(stored);
             setData(parsed);
 
-            // Unsplash Source APIを使って旅行先名で画像を検索
-            // ※キャッシュ対策にランダム文字列付与。Unsplash SourceAPIは現在は非推奨のため、unsplash.com/source の直接利用ではなく通常のUnsplash APIが推奨されますが、モック的にSource APIを使用します。
+            // 画像検索（Unsplash Sourceは終了しているため、LoremFlickrに変更）
             if (parsed.recommendation?.mainDestination?.searchQuery) {
                 const keyword = encodeURIComponent(parsed.recommendation.mainDestination.searchQuery.split(' ')[0]);
-                setImageUrl(`https://source.unsplash.com/800x600/?${keyword},landscape,travel`);
+                // キーワードに関連するFlickrのフリー画像を取得
+                setImageUrl(`https://loremflickr.com/800/600/${keyword},travel/all`);
             }
         }
     }, []);
@@ -125,7 +125,9 @@ export default function ResultPage() {
                                 src={imageUrl}
                                 alt={dest.name}
                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                onError={(e) => {
+                                    e.currentTarget.src = 'https://images.unsplash.com/photo-1488085061387-422e29b40080?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                                }}
                             />
                         </div>
                     )}
