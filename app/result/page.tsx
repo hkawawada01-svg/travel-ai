@@ -78,7 +78,8 @@ export default function ResultPage() {
 
     const { travelerType, recommendation } = data;
     const { mainDestination: dest, subDestinations, personalComment } = recommendation;
-    const tweetText = encodeURIComponent(`🌍 AI旅行先診断結果\n旅人タイプ：${travelerType.emoji}${travelerType.name}\nおすすめ：${dest.emoji}${dest.name}\n\n`);
+    const shareUrl = `${origin}/share?type=${travelerType.id}&dest=${encodeURIComponent(dest.name)}`;
+    const tweetText = `🌍 AI旅行先診断結果\n旅人タイプ：${travelerType.emoji}${travelerType.name}\nおすすめ：${dest.emoji}${dest.name}\n\n`;
 
     const card = (children: React.ReactNode, style?: React.CSSProperties) => (
         <div style={{ background: 'rgba(255,255,255,0.92)', borderRadius: '24px', padding: '28px', boxShadow: '0 8px 32px rgba(0,0,0,0.1)', ...style }}>
@@ -203,7 +204,7 @@ export default function ResultPage() {
                     <p style={{ color: '#64748b', fontSize: '0.85rem', textAlign: 'center', marginBottom: '20px' }}>友達にも旅人タイプを診断させよう</p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <a
-                            href={`https://twitter.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(`${origin}/share?type=${travelerType.id}&dest=${encodeURIComponent(dest.name)}`)}`}
+                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`}
                             target="_blank" rel="noopener noreferrer"
                             style={{ display: 'block', padding: '14px', borderRadius: '14px', background: '#000', color: 'white', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.95rem' }}
                         >
