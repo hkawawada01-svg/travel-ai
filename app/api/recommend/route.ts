@@ -15,8 +15,8 @@ export async function POST(req: NextRequest) {
     const travelerType = travelerTypes[typeId];
 
     const modeMap: Record<string, string> = { normal: '普通', spicy: '辛口', funny: 'お笑い' };
-    const budgetMap: Record<string, string> = { under5: '5万円以下', under10: '10万円以下', under20: '20万円以下', over20: '20万円以上' };
-    const daysMap: Record<string, string> = { '1day': '日帰り', 'weekend': '週末（1泊2日〜）', 'week': '1週間程度', 'long': '2週間以上' };
+    const budgetMap: Record<string, string> = { under5: '5万円以下', under10: '10万円以下', under20: '20万円以下', under30: '30万円以下', over30: '30万円以上' };
+    const daysMap: Record<string, string> = { short: '3日以内', week: '4〜7日', twoweeks: '8〜14日', long: '2週間以上' };
 
     const mode = answers.q_mode ? String(answers.q_mode) : 'normal';
     const budget = answers.q_budget ? budgetMap[String(answers.q_budget)] || '10万円以下' : '10万円以下';

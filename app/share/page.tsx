@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { travelerTypes, TravelerTypeId } from '@/data/travelerTypes';
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
@@ -61,7 +60,12 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 }
 
 export default async function ShareRedirectPage() {
-    // ユーザーがXなどのリンクを踏んでここにアクセスしてきたら、
-    // 自動的に診断のトップページ（または個別解説のtypesページ）にリダイレクトさせる
-    redirect('/');
+    // TwitterのクローラーにOGPを読み取らせるため、サーバーサイドリダイレクト（307）は行わず、
+    // HTMLを返した上でクライアント側でリダイレクトさせる
+    return (
+        <div style={{ backgroundColor: '#0f172a', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', fontFamily: 'sans-serif' }}>
+            <p>診断ページへリダイレクトしています...</p>
+            <script dangerouslySetInnerHTML={{ __html: `window.location.href = '/';` }} />
+        </div>
+    );
 }

@@ -94,6 +94,16 @@ export default function ResultPage() {
 
             {/* タイプヘッダー */}
             <section style={{ padding: '60px 20px 40px', textAlign: 'center', maxWidth: '560px', margin: '0 auto' }}>
+                {/* 古いキャッシュデータの警告バナー */}
+                {!dest.region && (
+                    <div style={{ background: '#fef3c7', color: '#92400e', padding: '16px', borderRadius: '16px', marginBottom: '24px', textAlign: 'center', border: '1px solid #fcd34d', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                        ⚠️ <strong>システムがアップデートされました！</strong><br />
+                        最新のAI分析（深層心理の長文解説やエリア情報など）を受け取るため、<br />
+                        大変お手数ですが下部の「🔄もう一度診断する」ボタンから<br />
+                        <strong>新しい診断をやり直して</strong>ください。
+                    </div>
+                )}
+
                 <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.8rem', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '12px' }}>
                     あなたの旅人タイプ
                 </p>
