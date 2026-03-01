@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-site.netlify.app';
+// 取得したカスタムドメインに更新
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://find-my-trip-ai.com';
 
 export const metadata: Metadata = {
   title: 'AI旅行先診断 | まだ知らない自分の旅が、ある。',
