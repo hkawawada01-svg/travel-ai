@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --sky: #e8f4fd;
+  --sky-mid: #b8dff5;
+  --teal: #2cb5a0;
+  --teal-dark: #1a9688;
+  --coral: #ff7043;
+  --coral-light: #ff9a76;
+  --amber: #ffb347;
+  --purple: #7c3aed;
+  --sand: #fff8f0;
+  --text-dark: #1a2e3b;
+  --text-mid: #4a6572;
+  --text-light: #8aa4b0;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--sky);
+  color: var(--text-dark);
+  font-family: 'Noto Sans JP', 'Outfit', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* Ticker */
+@keyframes ticker {
+  0% {
+    transform: translateX(100vw);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.ticker-track {
+  display: flex;
+  gap: 1.5rem;
+  animation: ticker 45s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* Cards */
+.card {
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Primary button */
+.btn-primary {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  color: white;
+  font-weight: 700;
+  border-radius: 100px;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(44, 181, 160, 0.4);
+}
+
+/* Coral button */
+.btn-coral {
+  background: linear-gradient(135deg, var(--coral), var(--coral-light));
+  color: white;
+  font-weight: 700;
+  border-radius: 100px;
+  transition: all 0.25s ease;
+}
+
+.btn-coral:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255, 112, 67, 0.4);
+}
+
+/* Text gradient */
+.text-teal-gradient {
+  background: linear-gradient(135deg, var(--teal), #3dd6bf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-coral-gradient {
+  background: linear-gradient(135deg, var(--coral), var(--amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Progress bar */
+.progress-bar {
+  height: 6px;
+  background: linear-gradient(90deg, var(--teal), #3dd6bf);
+  border-radius: 100px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(44, 181, 160, 0.4);
+}
+
+.progress-bg {
+  background: rgba(44, 181, 160, 0.15);
+  border-radius: 100px;
+  height: 6px;
+}
+
+/* Wave divider */
+.wave-divider {
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+/* Tag chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(44, 181, 160, 0.12);
+  color: var(--teal-dark);
+  border: 1.5px solid rgba(44, 181, 160, 0.25);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sky);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--teal);
+  border-radius: 3px;
+}
+
+/* ===== Bubble Animation ===== */
+@keyframes bubble-rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.6;
+  }
+
+  80% {
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: translateY(-110vh) scale(1.1);
+    opacity: 0;
+  }
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(2px);
+  animation: bubble-rise linear infinite;
+  pointer-events: none;
+}
