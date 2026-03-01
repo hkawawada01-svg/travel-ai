@@ -9,7 +9,6 @@ async function getFont(text: string) {
     const css = await (
         await fetch(API, {
             headers: {
-                // TTF または WOFF を取得するためのレガシーUser-Agent
                 "User-Agent": "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; de-at) AppleWebKit/533.21.1 (KHTML, like Gecko) Version/5.0.5 Safari/533.21.1"
             }
         })
@@ -124,6 +123,9 @@ export async function GET(request: NextRequest) {
             {
                 width: 1200,
                 height: 630,
+                headers: {
+                    'Cache-Control': 'public, max-age=31536000, immutable',
+                },
                 ...(fontData && {
                     fonts: [
                         {
