@@ -9,8 +9,9 @@ export function generateStaticParams() {
     }));
 }
 
-export function generateMetadata({ params }: { params: { id: string } }) {
-    const article = articles[params.id];
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const article = articles[id];
     if (!article) return { title: 'Not Found' };
 
     return {
@@ -19,8 +20,9 @@ export function generateMetadata({ params }: { params: { id: string } }) {
     };
 }
 
-export default function ArticleDetailPage({ params }: { params: { id: string } }) {
-    const article = articles[params.id];
+export default async function ArticleDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const article = articles[id];
 
     if (!article) {
         notFound();

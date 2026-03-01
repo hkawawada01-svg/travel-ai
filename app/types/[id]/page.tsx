@@ -8,8 +8,9 @@ export function generateStaticParams() {
     }));
 }
 
-export function generateMetadata({ params }: { params: { id: string } }) {
-    const typeId = params.id as TravelerTypeId;
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const typeId = id as TravelerTypeId;
     const t = travelerTypes[typeId];
 
     if (!t) return { title: 'Not Found' };
@@ -20,8 +21,9 @@ export function generateMetadata({ params }: { params: { id: string } }) {
     };
 }
 
-export default function TypeDetailPage({ params }: { params: { id: string } }) {
-    const typeId = params.id.toUpperCase() as TravelerTypeId;
+export default async function TypeDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const typeId = id.toUpperCase() as TravelerTypeId;
     const t = travelerTypes[typeId];
 
     if (!t) {
