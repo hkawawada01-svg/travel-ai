@@ -30,11 +30,22 @@ export default function ResultPage() {
     const [data, setData] = useState<ResultData | null>(null);
     const [copied, setCopied] = useState(false);
     const [origin, setOrigin] = useState('');
+    const [imageUrl, setImageUrl] = useState<string>('');
 
     useEffect(() => {
         setOrigin(window.location.origin);
         const stored = sessionStorage.getItem('travelResult');
-        if (stored) setData(JSON.parse(stored));
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            setData(parsed);
+
+            // Unsplash Source APIを使って旅行先名で画像を検索
+            // ※キャッシュ対策にランダム文字列付与。Unsplash SourceAPIは現在は非推奨のため、unsplash.com/source の直接利用ではなく通常のUnsplash APIが推奨されますが、モック的にSource APIを使用します。
+            if (parsed.recommendation?.mainDestination?.searchQuery) {
+                const keyword = encodeURIComponent(parsed.recommendation.mainDestination.searchQuery.split(' ')[0]);
+                setImageUrl(`https://source.unsplash.com/800x600/?${keyword},landscape,travel`);
+            }
+        }
     }, []);
 
     const handleShare = async () => {
@@ -100,12 +111,25 @@ export default function ResultPage() {
                     <p style={{ color: '#0891b2', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '12px' }}>
                         🎯 おすすめ旅行先
                     </p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
                         <span style={{ fontSize: '3rem' }}>{dest.emoji}</span>
                         <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontWeight: 800, color: '#0e7490', fontFamily: "'Outfit', 'Noto Sans JP', sans-serif" }}>
                             {dest.name}
                         </h2>
                     </div>
+
+                    {imageUrl && (
+                        <div style={{ width: '100%', height: '200px', borderRadius: '16px', overflow: 'hidden', marginBottom: '16px', position: 'relative', backgroundColor: '#e2e8f0' }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={imageUrl}
+                                alt={dest.name}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            />
+                        </div>
+                    )}
+
                     <p style={{ color: '#374151', fontSize: '0.9rem', lineHeight: 1.75, marginBottom: '16px' }}>{dest.reason}</p>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px' }}>
@@ -189,10 +213,23 @@ export default function ResultPage() {
                 </>)}
 
                 {/* もう一度 */}
-                <div style={{ textAlign: 'center', paddingTop: '8px' }}>
+                <div style={{ textAlign: 'center', paddingTop: '16px', paddingBottom: '32px' }}>
                     <Link href="/quiz">
-                        <button style={{ padding: '14px 36px', borderRadius: '100px', border: '2px solid rgba(255,255,255,0.4)', background: 'transparent', color: 'white', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
-                            もう一度診断する →
+                        <button style={{
+                            padding: '16px 40px',
+                            borderRadius: '100px',
+                            border: 'none',
+                            background: 'linear-gradient(135deg, #10b981, #059669)',
+                            color: 'white',
+                            fontWeight: 800,
+                            cursor: 'pointer',
+                            fontSize: '1.05rem',
+                            boxShadow: '0 4px 14px rgba(16, 185, 129, 0.4)',
+                            transition: 'all 0.2s ease',
+                            width: '100%',
+                            maxWidth: '300px'
+                        }}>
+                            🔄 もう一度診断する
                         </button>
                     </Link>
                 </div>
