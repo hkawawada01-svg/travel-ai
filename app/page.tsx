@@ -242,7 +242,7 @@ export default function HomePage() {
           <Link href="/privacy" style={{ color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'none' }}>プライバシーポリシー</Link>
           <a href="https://docs.google.com/forms/d/e/1FAIpQLSchC1riak4QihhbX6ak6tbphbEbQadQViFRvuYDR6unMl7hdA/viewform" target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8', fontSize: '0.8rem', textDecoration: 'none' }}>お問い合わせ</a>
         </div>
-        <p style={{ color: '#64748b', fontSize: '0.78rem', margin: '4px 0' }}>© 2025 AI旅行先診断. All rights reserved.</p>
+        <p style={{ color: '#64748b', fontSize: '0.78rem', margin: '4px 0' }}>© 2026 AI旅行先診断. All rights reserved.</p>
         <p style={{ color: '#64748b', fontSize: '0.78rem', margin: '4px 0' }}>※ 旅行先への安全確認は必ずご自身でお願いいたします。</p>
       </footer>
     </main>
