@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
         const tagline = searchParams.get('tagline') || 'まだ知らない自分の旅が、ある。';
 
         // 描画するすべての文字列からユニークな文字セットを抽出する
-        const allText = 'あなたの旅人タイプは...型『』そんなあなたにおすすめなのは📍' + type + typeName + dest + emoji + tagline;
+        const allText = 'あなたの旅人タイプは...型『』そんなあなたにおすすめなのは📍' + type + typeName + dest + emoji + tagline + 'RESULTTRAVELERBESTRECOMMENDATIONAIPLANNERfind-my-trip-ai.com';
         const uniqueChars = Array.from(new Set(allText.split(''))).join('');
         const fontData = await getFont(uniqueChars);
 
@@ -46,13 +46,15 @@ export async function GET(request: NextRequest) {
                         width: '100%',
                         display: 'flex',
                         flexDirection: 'column',
+                        alignItems: 'center',
                         justifyContent: 'center',
+                        backgroundColor: '#0f172a',
                         fontFamily: '"Noto Sans JP", sans-serif',
                         position: 'relative',
-                        backgroundColor: '#0f172a',
+                        padding: '40px',
                     }}
                 >
-                    {/* Background Image */}
+                    {/* Background Blur Image */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src={bgUrl}
@@ -64,46 +66,56 @@ export async function GET(request: NextRequest) {
                             width: '100%',
                             height: '100%',
                             objectFit: 'cover',
-                            opacity: 0.45,
+                            opacity: 0.6,
                         }}
                     />
 
-                    {/* Content Overlay */}
+                    {/* White Card */}
                     <div
                         style={{
                             display: 'flex',
                             flexDirection: 'column',
-                            padding: '60px 80px',
+                            backgroundColor: 'white',
+                            width: '90%',
+                            height: '85%',
+                            borderRadius: '32px',
+                            boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
+                            padding: '40px 60px',
                             position: 'relative',
-                            zIndex: 10,
-                            height: '100%',
-                            justifyContent: 'space-between',
+                            overflow: 'hidden',
                         }}
                     >
-                        {/* Top half: traveler type */}
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <div style={{ fontSize: '32px', color: '#e2e8f0', marginBottom: '16px', fontWeight: 700, letterSpacing: '0.05em' }}>
-                                あなたの旅人タイプは...
+                        {/* Decorative Top Bar */}
+                        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '12px', background: 'linear-gradient(90deg, #0ea5e9, #2563eb)' }}></div>
+
+                        {/* Top Section */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <div style={{ fontSize: '24px', fontWeight: 700, color: '#64748b', letterSpacing: '0.1em' }}>RESULT: TRAVELER TYPE</div>
+                                <div style={{ fontSize: '48px', fontWeight: 900, color: '#1e293b', marginTop: '4px' }}>{typeName}</div>
+                                <div style={{ fontSize: '22px', fontWeight: 700, color: '#0ea5e9', marginTop: '8px' }}>『{tagline}』</div>
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <div style={{ fontSize: '72px', marginRight: '24px' }}>{emoji}</div>
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                    <div style={{ fontSize: '28px', color: '#cbd5e1', fontWeight: 700, marginBottom: '4px' }}>{type}型</div>
-                                    <div style={{ fontSize: '56px', color: '#ffffff', fontWeight: 900 }}>{typeName}</div>
+                            <div style={{ fontSize: '100px', lineHeight: 1 }}>{emoji}</div>
+                        </div>
+
+                        {/* Recommendation Mid Bar */}
+                        <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0', padding: '24px 0' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                <div style={{ fontSize: '20px', fontWeight: 700, color: '#64748b', marginBottom: '8px' }}>BEST RECOMMENDATION</div>
+                                <div style={{ fontSize: dest.length > 12 ? '48px' : '64px', fontWeight: 900, color: '#0f172a', lineHeight: 1.1 }}>
+                                    📍 {dest}
                                 </div>
-                            </div>
-                            <div style={{ fontSize: '28px', color: '#cbd5e1', marginTop: '16px', fontWeight: 700 }}>
-                                『{tagline}』
                             </div>
                         </div>
 
-                        {/* Bottom half: recommendation */}
-                        <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'auto', background: 'rgba(0,0,0,0.65)', padding: '40px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                            <div style={{ fontSize: '28px', color: '#e2e8f0', marginBottom: '12px', fontWeight: 700 }}>
-                                そんなあなたにおすすめなのは
+                        {/* Footer Section */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 'auto' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <div style={{ fontSize: '18px', fontWeight: 700, color: '#94a3b8' }}>Type ID: {type}</div>
+                                <div style={{ fontSize: '24px', fontWeight: 900, color: '#334155' }}>AI TRAVEL PLANNER</div>
                             </div>
-                            <div style={{ fontSize: dest.length > 15 ? '56px' : '72px', color: '#ffffff', fontWeight: 900, lineHeight: 1.2 }}>
-                                📍 {dest}
+                            <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#f1f5f9', padding: '12px 24px', borderRadius: '100px' }}>
+                                <div style={{ fontSize: '20px', fontWeight: 900, color: '#2563eb' }}>find-my-trip-ai.com</div>
                             </div>
                         </div>
                     </div>

@@ -41,28 +41,13 @@ export default function ResultPage() {
             const parsed = JSON.parse(stored);
             setData(parsed);
 
-            // 画像検索（Unsplash Sourceは終了しているため、LoremFlickrに変更）
+            // 画像検索
             if (parsed.recommendation?.mainDestination?.searchQuery) {
                 const keyword = encodeURIComponent(parsed.recommendation.mainDestination.searchQuery.split(' ')[0]);
-                // キーワードに関連するFlickrのフリー画像を取得
                 setImageUrl(`https://loremflickr.com/800/600/${keyword},travel/all`);
             }
         }
     }, []);
-
-    const handleShare = async () => {
-        const shareUrl = `${origin}/share?type=${data?.travelerType.id}&dest=${encodeURIComponent(data?.recommendation.mainDestination.name || '')}`;
-        const text = data
-            ? `🌍 AI旅行先診断の結果\n\n私の旅人タイプ：${data.travelerType.emoji} ${data.travelerType.name}\nおすすめ旅行先：${data.recommendation.mainDestination.emoji} ${data.recommendation.mainDestination.name}\n\nあなたも診断してみて！`
-            : '';
-        if (navigator.share) {
-            navigator.share({ title: 'AI旅行先診断の結果', text, url: shareUrl });
-        } else {
-            navigator.clipboard.writeText(`${text}\n${shareUrl}`);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        }
-    };
 
     if (!data) {
         return (
@@ -80,8 +65,20 @@ export default function ResultPage() {
     const { travelerType, recommendation } = data;
     const { mainDestination: dest, subDestinations, personalComment } = recommendation;
     const keyword = dest.searchQuery ? dest.searchQuery.split(' ')[0] : dest.name;
-    const shareUrl = `${origin}/share?type=${travelerType.id}&dest=${encodeURIComponent(dest.name)}&keyword=${encodeURIComponent(keyword)}`;
+    const v = Date.now();
+    const shareUrl = `${origin}/share?type=${travelerType.id}&dest=${encodeURIComponent(dest.name)}&keyword=${encodeURIComponent(keyword)}&v=${v}`;
     const tweetText = `🌍 AI旅行先診断結果\n旅人タイプ：${travelerType.emoji}${travelerType.name}\nおすすめ：${dest.emoji}${dest.name}\n\n`;
+    const ogImageUrl = `${origin}/api/og?type=${travelerType.id}&typeName=${encodeURIComponent(travelerType.name)}&emoji=${encodeURIComponent(travelerType.emoji)}&dest=${encodeURIComponent(dest.name)}&keyword=${encodeURIComponent(keyword)}&tagline=${encodeURIComponent(travelerType.tagline)}&v=${v}`;
+
+    const handleShare = async () => {
+        if (navigator.share) {
+            navigator.share({ title: 'AI旅行先診断の結果', text: tweetText, url: shareUrl });
+        } else {
+            navigator.clipboard.writeText(`${tweetText}\n${shareUrl}`);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
 
     const card = (children: React.ReactNode, style?: React.CSSProperties) => (
         <div style={{ background: 'rgba(255,255,255,0.92)', borderRadius: '24px', padding: '28px', boxShadow: '0 8px 32px rgba(0,0,0,0.1)', ...style }}>
@@ -140,7 +137,6 @@ export default function ResultPage() {
 
                     {imageUrl && (
                         <div style={{ width: '100%', height: '200px', borderRadius: '16px', overflow: 'hidden', marginBottom: '16px', position: 'relative', backgroundColor: '#e2e8f0' }}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={imageUrl}
                                 alt={dest.name}
@@ -177,12 +173,11 @@ export default function ResultPage() {
                         {dest.spots.map((spot, i) => (
                             <div key={i} style={{ background: '#f8fafc', borderRadius: '14px', padding: '14px', border: '1px solid #e2e8f0' }}>
                                 <p style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1e293b', marginBottom: '4px' }}>{spot.name}</p>
-                                <p style={{ fontSize: '0.8rem', color: '#64748b', lineHeight: 1.6 }}>{spot.description}</p>
+                                <p style={{ fontSize: '0.82rem', color: '#64748b', lineHeight: 1.6 }}>{spot.description}</p>
                             </div>
                         ))}
                     </div>
 
-                    {/* アフィリエイトCTA & 検索ボタン */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <a href="https://www.trip.com/flights/?locale=ja-jp" target="_blank" rel="noopener noreferrer"
                             style={{ display: 'block', padding: '16px', borderRadius: '16px', background: 'linear-gradient(135deg, #f97316, #fb923c)', color: 'white', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.95rem' }}>
@@ -192,11 +187,7 @@ export default function ResultPage() {
                             style={{ display: 'block', padding: '14px', borderRadius: '16px', background: '#003580', color: 'white', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.9rem' }}>
                             🏨 ホテルを探す（Booking.com）
                         </a>
-                        <a href="https://travel.rakuten.co.jp/" target="_blank" rel="noopener noreferrer"
-                            style={{ display: 'block', padding: '14px', borderRadius: '16px', background: '#bf0000', color: 'white', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.9rem' }}>
-                            🗺️ ツアーを探す（楽天トラベル）
-                        </a>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '4px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                             <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dest.name)}`} target="_blank" rel="noopener noreferrer"
                                 style={{ display: 'block', padding: '12px', borderRadius: '12px', background: '#f1f5f9', color: '#475569', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.85rem' }}>
                                 📍 Google Maps
@@ -229,18 +220,33 @@ export default function ResultPage() {
                 {card(<>
                     <h2 style={{ fontWeight: 800, color: '#1e293b', marginBottom: '6px', textAlign: 'center', fontSize: '1.1rem' }}>結果をシェアする 🎉</h2>
                     <p style={{ color: '#64748b', fontSize: '0.85rem', textAlign: 'center', marginBottom: '20px' }}>友達にも旅人タイプを診断させよう</p>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <a
-                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`}
-                            target="_blank" rel="noopener noreferrer"
-                            style={{ display: 'block', padding: '14px', borderRadius: '14px', background: '#000', color: 'white', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.95rem' }}
-                        >
-                            𝕏 でシェア
-                        </a>
-                        <button onClick={handleShare}
-                            style={{ padding: '14px', borderRadius: '14px', border: '2px solid #e2e8f0', background: 'white', color: '#374151', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
-                            {copied ? '✓ コピーしました！' : '🔗 リンクをコピー'}
-                        </button>
+
+                    {/* 画像保存・シェアセクション */}
+                    <div style={{ marginTop: '24px', textAlign: 'center', padding: '20px', background: '#f8fafc', borderRadius: '20px', border: '1px solid #e2e8f0' }}>
+                        <h3 style={{ color: '#1e293b', fontSize: '1rem', fontWeight: 800, marginBottom: '8px' }}>
+                            📸 画像を保存してシェア
+                        </h3>
+                        <p style={{ color: '#475569', fontSize: '0.8rem', marginBottom: '16px', lineHeight: 1.5 }}>
+                            下の画像を長押し（または右クリック）で保存して、<br />
+                            𝕏 に貼り付けて投稿しよう！
+                        </p>
+                        <div style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', marginBottom: '20px' }}>
+                            <img src={ogImageUrl} alt="Traveler Card" style={{ width: '100%', display: 'block' }} />
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <a
+                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`}
+                                target="_blank" rel="noopener noreferrer"
+                                style={{ display: 'block', padding: '14px', borderRadius: '14px', background: '#000', color: 'white', fontWeight: 700, textAlign: 'center', textDecoration: 'none', fontSize: '0.95rem' }}
+                            >
+                                𝕏 でシェア
+                            </a>
+                            <button onClick={handleShare}
+                                style={{ padding: '14px', borderRadius: '14px', border: '2px solid #e2e8f0', background: 'white', color: '#374151', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
+                                {copied ? '✓ コピーしました！' : '🔗 リンクをコピー'}
+                            </button>
+                        </div>
                     </div>
                 </>)}
 
